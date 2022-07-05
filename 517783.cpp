@@ -4,16 +4,6 @@
 
 using namespace std;
 
-/*
-	Dung cai cmd nay de test
-	g++ 517783.cpp | .\a.exe [may chu cai ghi lien nhau]
-	g++ 517783.cpp | .\a.exe cape
-
-	De ti chinh lai may chu cai ghi cach nhau giong trong file
-
-	A` voi lai cai dem so tu` no bi nguoc xuong duoi, de ti xem cach chinh lai
-*/
-
 struct Node
 {
 	Node *child[26];
@@ -30,7 +20,7 @@ Node *CreateNode()
 	n->terminal = false;
 	return n;
 }
-
+	
 void InsertNode(Node *&root, string key, int d = 0)
 {
 	if (root == NULL)
@@ -42,15 +32,6 @@ void InsertNode(Node *&root, string key, int d = 0)
 		return;
 	}
 	InsertNode(root->child[value], key, d + 1);
-}
-
-bool FindNode(Node *root, string key, int d)
-{
-	if (root == NULL)
-		return false;
-	if (d == key.length())
-		return true;
-	int c = key[d] - 'a';
 }
 
 void PrintTrie(Node *root, string s = "")
@@ -71,7 +52,7 @@ void PrintTrie(Node *root, string s = "")
 	}
 }
 
-void PrintWordRecursize(Node *root, bool *check, string s = "")
+void PrintWordRecursive(Node *root, bool *check, string s = "")
 {
 	if (root == NULL)
 	{
@@ -88,17 +69,18 @@ void PrintWordRecursize(Node *root, bool *check, string s = "")
 		{
 			char c = i + 'a';
 			string newS = s + c;
-			PrintWordRecursize(root->child[i], check, newS);
+			PrintWordRecursive(root->child[i], check, newS);
 		}
 	}
 }
-void CountWord(Node *root, bool *check, int &num, string s = "")
+int CountWord(Node *root, bool *check, string s = "")
 {
+	int count = 0;
 	if (root == NULL)
-		return;
+		return count;
 	if (root->terminal)
 	{
-		num++;
+		count ++;
 	}
 
 	for (int i = 0; i < 26; i++)
@@ -107,26 +89,25 @@ void CountWord(Node *root, bool *check, int &num, string s = "")
 		{
 			char c = i + 'a';
 			string newS = s + c;
-			CountWord(root->child[i], check, num, newS);
+			count += CountWord(root->child[i], check, newS);
 		}
 	}
+
+	return count;
 }
 void PrintAllWord(Node *root, string words)
 {
+	//SETUP
 	bool *check = new bool[26]{false};
 	int n = words.length();
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; i += 2)
 	{
 		check[words[i] - 'a'] = true;
 	}
-	int Num = 0;
-	CountWord(root, check, Num);
-	cout << Num << endl;
-	for (int i = 0; i < n; i++)
-	{
-		check[words[i] - 'a'] = true;
-	}
-	PrintWordRecursize(root, check);
+
+	cout << CountWord(root, check) << endl;
+
+	PrintWordRecursive(root, check);
 }
 
 void ReadDict(Node *&root, string file_name)
@@ -147,19 +128,9 @@ void ReadDict(Node *&root, string file_name)
 int main(int argc, char *argv[])
 {
 	Node *root = NULL;
-	ReadDict(root, "Dict1.txt");
-	// PrintTrie(root);
-
-	cout << "\n\n\n\n\n";
+	ReadDict(root, "Dic.txt");
 	string words;
-	if (argc == 1)
-	{
-		cout << "Nhap cac ki tu : ";
-		cin >> words;
-	}
-	else
-	{
-		words = argv[1];
-	}
+	cout << "Nhap cac ki tu : ";
+	getline(cin, words);
 	PrintAllWord(root, words);
 }
