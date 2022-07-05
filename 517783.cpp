@@ -122,6 +122,10 @@ void PrintAllWord(Node *root, string words)
 	int Num = 0;
 	CountWord(root, check, Num);
 	cout << Num << endl;
+	for (int i = 0; i < n; i++)
+	{
+		check[words[i] - 'a'] = true;
+	}
 	PrintWordRecursize(root, check);
 }
 
