@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
 {
 	Node *root = NULL;
 	ReadDict(root, "Dict1.txt");
-	// PrintTrie(root);ay
+	// PrintTrie(root);
 
 	cout << "\n\n\n\n\n";
 	string words;
@@ -158,5 +158,4 @@ int main(int argc, char *argv[])
 		words = argv[1];
 	}
 	PrintAllWord(root, words);
-	system("pause");
 }
