@@ -18,7 +18,7 @@ struct Node {
 	Node* child[26];
 	bool terminal;
 };
-int Num = 0;
+
 
 
 Node* CreateNode() {
@@ -61,9 +61,11 @@ void PrintTrie(Node* root, string s = "") {
 	}
 }
 
-void PrintWordRecursize(Node* root, bool* check, string s = ""){
+int PrintWordRecursize(Node* root, bool* check, string s = ""){
+	int count = 0;
 	if (root->terminal) {
 		cout << s << endl;
+		count++;
 	}
 
 
@@ -71,34 +73,22 @@ void PrintWordRecursize(Node* root, bool* check, string s = ""){
 		if (root->child[i] != NULL && check[i]) {
 			char c = i + 'a';
 			string newS = s + c;
-			PrintWordRecursize(root->child[i], check, newS);
+			count += PrintWordRecursize(root->child[i], check, newS);
 		}
 	}
-}
-void CountWord(Node* root, bool* check, string s = "") {
-	if (root->terminal) {
-		Num++;
-	}
 
-
-	for (int i = 0; i < 26; i++) {
-		if (root->child[i] != NULL && check[i]) {
-			char c = i + 'a';
-			string newS = s + c;
-			CountWord(root->child[i], check, newS);
-		}
-	}
+	return count;
 }
-void PrintAllWord(Node* root, string words){
+
+int PrintAllWord(Node* root, string words){
 	bool* check = new bool[26]{false};
 	int n = words.length();
 	for (int i = 0; i < n; i++)
 	{
 		check[words[i] - 'a'] = true;
 	}
-	CountWord(root, check);
-	cout << Num << endl;
-	PrintWordRecursize(root, check);
+	
+	return PrintWordRecursize(root, check);
 }
 
 void ReadDict(Node* &root, string file_name) {
@@ -123,6 +113,7 @@ int main(int argc, char *argv[]) {
 	}else{
 		words = argv[1];
 	}
-	PrintAllWord(root, words);
+	
 
+	cout << PrintAllWord(root, words);
 }
